@@ -1,0 +1,116 @@
+// User function Template for C++
+
+
+class Solution {
+  public:
+    bool isvalid(int i,int j,int n,int m){
+        
+        if(i>=0 && i<n && j>=0 && j<m){
+            return true;
+        }
+        return false;
+    }
+    int findpar(int node,vector<int>&par){
+        
+        if(node==par[node]){
+            return node;
+        }
+        
+        return par[node]=findpar(par[node],par);
+    }
+    
+    void Union(int u,int v,vector<int>&rank,vector<int>&par){
+        
+        int par_u=findpar(u,par);
+        int par_v=findpar(v,par);
+        
+        if(par_u==par_v){
+            return ;
+        }
+        
+        if(rank[par_u]>rank[par_v]){
+            
+            par[par_v]=par_u;
+        }
+        else if(rank[par_v]>rank[par_u]){
+            
+            par[par_u]=par_v;
+        }
+        else{
+             par[par_u]=par_v;
+             rank[par_v]++;
+        }
+    }
+    void UnionbySize(int u,int v,vector<int>&size,vector<int>&par){
+        
+        
+        int par_u=findpar(u,par);
+        int par_v=findpar(v,par);
+        
+         if(par_u==par_v){
+            return ;
+        }
+        
+        if(size[par_u]>size[par_v]){
+            
+            par[par_v]=par_u;
+            size[par_u]=size[par_u]+size[par_v];
+        }
+        else{
+             par[par_u]=par_v;
+             size[par_v]=size[par_u]+size[par_v];
+        }
+        
+    }
+    vector<int> numOfIslands(int n, int m, vector<vector<int>> &operators) {
+        
+        int t=n*m;
+        vector<vector<int>>vis(n,vector<int>(m,0));
+        int count=0;
+        vector<int>ans(operators.size(),0);
+        
+        vector<int>rank(t,0);
+        vector<int>size(t,1);
+        vector<int>par(t);
+        for(int i=0;i<t;i++){
+            par[i]=i;
+        }
+        for(int i=0;i<operators.size();i++){
+            
+            int row=operators[i][0];
+            int col=operators[i][1];
+            
+            if(vis[row][col]==1){
+                ans[i]=count;
+            }
+            else{
+                vis[row][col]=1;
+                count++;
+                vector<int>dr={0,1,0,-1};
+                vector<int>dc={1,0,-1,0};
+                
+                for(int k=0;k<4;k++){
+                    
+                    int adjr=row+dr[k];
+                    int adjc=col+dc[k];
+                    
+                    if(isvalid(adjr,adjc,n,m)){
+                        
+                        if(vis[adjr][adjc]==1){
+                            
+                            int node1=row*m+col;
+                            int node2=adjr*m+adjc;
+                            
+                            if(findpar(node1,par)!=findpar(node2,par)){
+                                count--;
+                                Union(node1,node2,size,par);
+                            }
+                        }
+                    }
+                }
+                ans[i]=count;
+            }
+        }
+        return ans;
+    }
+};
