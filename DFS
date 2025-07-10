@@ -1,0 +1,25 @@
+class Solution {
+    public void solve(Integer node,ArrayList<ArrayList<Integer>>adj,int vis[],ArrayList<Integer>res){
+        vis[node]=1;
+        res.add(node);
+        
+        for(Integer i: adj.get(node)){
+            if(vis[i]==0){
+                solve(i,adj,vis,res);
+            }
+        }
+    }
+    public ArrayList<Integer> dfs(ArrayList<ArrayList<Integer>> adj) {
+        
+        int n=adj.size();
+        ArrayList<Integer>res=new ArrayList<>();
+        int vis[]=new int[n];
+        vis[0]=1;
+        
+        solve(0,adj,vis,res);
+        
+        return res;
+        
+        
+    }
+}
