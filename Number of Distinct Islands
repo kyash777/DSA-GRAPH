@@ -1,0 +1,92 @@
+Given a boolean 2D matrix grid of size n * m. You have to find the number of distinct islands where a group of connected 1s (horizontally or vertically) forms an island. Two islands are considered to be distinct if and only if one island is not equal to another (not rotated or reflected).
+
+Example 1:
+
+Input:
+grid[][] = {{1, 1, 0, 0, 0},
+            {1, 1, 0, 0, 0},
+            {0, 0, 0, 1, 1},
+            {0, 0, 0, 1, 1}}
+Output:
+1
+Explanation:
+grid[][] = {{1, 1, 0, 0, 0}, 
+            {1, 1, 0, 0, 0}, 
+            {0, 0, 0, 1, 1}, 
+            {0, 0, 0, 1, 1}}
+Same colored islands are equal.
+We have 2 equal islands, so we 
+have only 1 distinct island.
+
+Example 2:
+
+Input:
+grid[][] = {{1, 1, 0, 1, 1},
+            {1, 0, 0, 0, 0},
+            {0, 0, 0, 0, 1},
+            {1, 1, 0, 1, 1}}
+Output:
+3
+Explanation:
+grid[][] = {{1, 1, 0, 1, 1}, 
+            {1, 0, 0, 0, 0}, 
+            {0, 0, 0, 0, 1}, 
+            {1, 1, 0, 1, 1}}
+Same colored islands are equal.
+We have 4 islands, but 2 of them
+are equal, So we have 3 distinct islands
+
+
+class Solution {
+    public String toString(int r,int c){
+    return Integer.toString(r)+" "+Integer.toString(c);
+}
+    boolean isValid(int i,int j,int n,int m){
+        if(i>=0 && i<n && j>=0 && j<m){
+            return true;
+        }
+        return false;
+    }
+    void dfs(int i,int j,int si,int sj,int n,int m,int grid[][],ArrayList<String>arr){
+        
+        grid[i][j]=2;
+        int cx=i-si;
+        int cy=j-sj;
+        arr.add(toString(cx,cy));
+        
+        int dx[]={1,0,-1,0};
+        int dy[]={0,1,0,-1};
+        
+        for(int k=0;k<4;k++){
+            int ni=i+dx[k];
+            int nj=j+dy[k];
+            
+            if(isValid(ni,nj,n,m) && grid[ni][nj]==1){
+                dfs(ni,nj,si,sj,n,m,grid,arr);
+            }
+            
+        }
+    }
+
+    int countDistinctIslands(int[][] grid) {
+        
+        int n=grid.length;
+        int m=grid[0].length;
+        
+        Set<ArrayList<String>>s=new HashSet<>();
+        
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(grid[i][j]==1){
+                    ArrayList<String>arr=new ArrayList<>();
+                    dfs(i,j,i,j,n,m,grid,arr);
+                    s.add(arr);
+                    
+                }
+            }
+        }
+        
+        return s.size();
+        
+    }
+}
