@@ -1,0 +1,57 @@
+class Solution {
+    boolean dfs(int node,ArrayList<ArrayList<Integer>>adj,int vis[],int dfsVis[]){
+        vis[node]=1;
+        dfsVis[node]=1;
+        
+        for(int neighbor: adj.get(node)){
+            if(vis[neighbor]==0){
+                if(dfs(neighbor,adj,vis,dfsVis)){
+                    return true;
+                };
+            }else{
+                if(dfsVis[neighbor]==1){
+                    return true;
+                }
+            }
+        }
+        dfsVis[node]=0;
+        return false;
+    }
+    public boolean isCyclic(int v, int[][] edges) {
+        
+        int n=edges.length;
+        ArrayList<ArrayList<Integer>>adj=new ArrayList<>();
+        
+        for(int i=0;i<v;i++){
+            adj.add(new ArrayList<Integer>());
+        }
+        
+        for(int i=0;i<n;i++){
+            int u=edges[i][0];
+            int vv=edges[i][1];
+            
+            adj.get(u).add(vv);
+            
+        }
+        
+        int vis[]=new int[v];
+        int dfsVis[]=new int [v];
+        
+        for(int i=0;i<v;i++){
+            vis[i]=0;
+            dfsVis[i]=0;
+        }
+        
+        for(int i=0;i<v;i++){
+            if(vis[i]==0){
+                if(dfs(i,adj,vis,dfsVis)){
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+        
+        
+    }
+}
