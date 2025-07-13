@@ -1,0 +1,47 @@
+class Solution {
+    
+    boolean dfs(int node,int dfsvis[],int vis[],int cycle[],List<List<Integer>> adj){
+        vis[node]=1;
+        dfsvis[node]=1;
+        
+        for(int i : adj.get(node)){
+            if(vis[i]==0){
+                if(dfs(i,dfsvis,vis,cycle,adj)){
+                    return true;
+                }
+            }else{
+                if(dfsvis[i]==1){
+                    return true;
+                }
+            }
+        }
+        
+        cycle[node]=1;
+        dfsvis[node]=0;
+        return false;
+    }
+    List<Integer> eventualSafeNodes(int v, List<List<Integer>> adj) {
+
+        int vis[]=new int [v];
+        int dfsvis[]=new int [v];
+        int cycle[]=new int [v];
+        ArrayList<Integer>res=new ArrayList<>();
+        
+        for(int i=0;i<v;i++){
+            if(vis[i]==0){
+                dfs(i,dfsvis,vis,cycle,adj);
+            }
+        }
+        
+        for(int i=0;i<v;i++){
+            if(cycle[i]==1){
+                res.add(i);
+            }
+        }
+        
+        return res;
+        
+        
+        
+    }
+}
